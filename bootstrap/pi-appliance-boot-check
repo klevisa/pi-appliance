@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state_dir=/boot/firmware/pi-appliance-state
+runtime_dir=/run/pi-appliance
+nvme_root="$runtime_dir/nvme-root"
+mkdir -p "$state_dir" "$runtime_dir" "$nvme_root"
+
+mounted=false
+while read -r device; do
+  if mount -o ro,noload "$device" "$nvme_root" 2>/dev/null; then
+    mounted=true
+    break
+  fi
+done < <(lsblk -rpno NAME,TYPE | awk '$2 == "part" && $1 ~ /^\/dev\/nvme/ {print $1}')
+
+mode=$(/usr/local/sbin/appliancectl select-mode \
+  --state-dir "$state_dir" \
+  --nvme-root "$nvme_root")
+printf '%s\n' "$mode" > "$runtime_dir/mode"
+logger -t pi-appliance-bootstrap "selected mode: $mode"
+
+if [[ "$mounted" == true ]]; then
+  umount "$nvme_root"
+fi

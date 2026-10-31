@@ -1,0 +1,12 @@
+[Unit]
+Description=Pi Appliance bootstrap state detection
+After=local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pi-appliance-boot-check
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

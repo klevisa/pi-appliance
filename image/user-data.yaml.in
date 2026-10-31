@@ -1,0 +1,48 @@
+#cloud-config
+hostname: pilab-bootstrap
+manage_etc_hosts: true
+ssh_pwauth: false
+disable_root: true
+
+users:
+  - name: klevis
+    gecos: Pi Appliance Development Administrator
+    groups: [adm, sudo]
+    shell: /bin/bash
+    lock_passwd: true
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - __SSH_PUBLIC_KEY__
+
+package_update: true
+packages:
+  - git
+  - jq
+  - rsync
+  - parted
+  - gdisk
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/20-pi-appliance.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      PermitRootLogin no
+      PubkeyAuthentication yes
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitEmptyPasswords no
+  - path: /etc/pi-appliance/bootstrap-release
+    owner: root:root
+    permissions: "0644"
+    content: |
+      development
+
+runcmd:
+  - [systemctl, enable, ssh]
+  - [systemctl, restart, ssh]
+  - [mkdir, -p, /opt/pi-appliance]
+  - [bash, -c, "if [ -f /boot/firmware/pi-appliance-source.tar.gz ]; then tar -xzf /boot/firmware/pi-appliance-source.tar.gz -C /opt/pi-appliance --strip-components=1; fi"]
+  - [bash, -c, "if [ -x /opt/pi-appliance/scripts/install-development-bootstrap.sh ]; then /opt/pi-appliance/scripts/install-development-bootstrap.sh; fi"]
+
+final_message: "Pi appliance bootstrap provisioning complete after $UPTIME seconds"

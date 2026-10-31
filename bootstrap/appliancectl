@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "usage: appliancectl select-mode --state-dir DIR --nvme-root DIR" >&2
+  exit 64
+}
+
+[[ ${1:-} == "select-mode" ]] || usage
+shift
+
+state_dir=
+nvme_root=
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --state-dir) state_dir=${2:-}; shift 2 ;;
+    --nvme-root) nvme_root=${2:-}; shift 2 ;;
+    *) usage ;;
+  esac
+done
+
+[[ -n "$state_dir" && -n "$nvme_root" ]] || usage
+
+if [[ -f "$state_dir/force-rescue" ]]; then
+  printf 'rescue\n'
+  exit 0
+fi
+
+if [[ -f "$nvme_root/etc/pi-appliance/release" ]]; then
+  printf 'appliance\n'
+  exit 0
+fi
+
+printf 'install\n'
