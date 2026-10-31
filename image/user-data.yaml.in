@@ -42,7 +42,7 @@ runcmd:
   - [systemctl, enable, ssh]
   - [systemctl, restart, ssh]
   - [mkdir, -p, /opt/pi-appliance]
-  - [bash, -c, "if [ -f /boot/firmware/pi-appliance-source.tar.gz ]; then tar -xzf /boot/firmware/pi-appliance-source.tar.gz -C /opt/pi-appliance --strip-components=1; fi"]
+  - [bash, -c, "git clone --branch main --single-branch https://github.com/klevisa/pi-appliance.git /opt/pi-appliance || { rm -rf /opt/pi-appliance; mkdir -p /opt/pi-appliance; if [ -f /boot/firmware/pi-appliance-source.tar.gz ]; then tar -xzf /boot/firmware/pi-appliance-source.tar.gz -C /opt/pi-appliance --strip-components=1; else exit 1; fi; }"]
   - [bash, -c, "if [ -x /opt/pi-appliance/scripts/install-development-bootstrap.sh ]; then /opt/pi-appliance/scripts/install-development-bootstrap.sh; fi"]
 
 final_message: "Pi appliance bootstrap provisioning complete after $UPTIME seconds"
