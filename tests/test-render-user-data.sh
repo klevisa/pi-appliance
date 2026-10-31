@@ -16,6 +16,7 @@ KEY
 
 grep -Fxq 'hostname: pilab-bootstrap' "$work/user-data"
 grep -Fxq 'ssh_pwauth: false' "$work/user-data"
+grep -Fxq '  - openssh-server' "$work/user-data"
 grep -Fq 'https://github.com/klevisa/pi-appliance.git' "$work/user-data"
 grep -Fq 'sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tITestOnlyKey appliance-test' "$work/user-data"
 if grep -Fq '__SSH_PUBLIC_KEY__' "$work/user-data"; then

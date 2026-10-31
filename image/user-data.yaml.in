@@ -16,6 +16,7 @@ users:
 
 package_update: true
 packages:
+  - openssh-server
   - git
   - jq
   - rsync
