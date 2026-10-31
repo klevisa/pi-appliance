@@ -12,5 +12,7 @@ trap 'rm -rf "$work"' EXIT
 [[ -d "$work/root/var/lib/pi-appliance" ]]
 grep -Fq 'ExecStart=/usr/local/sbin/pi-appliance-boot-check' \
   "$work/root/etc/systemd/system/pi-appliance-bootstrap.service"
+grep -Fq 'systemctl enable --now pi-appliance-bootstrap.service' \
+  "$repo_root/scripts/install-development-bootstrap.sh"
 
 printf 'development-bootstrap install test passed\n'

@@ -20,5 +20,5 @@ install -m 0644 "$repo_root/bootstrap/pi-appliance-bootstrap.service" \
 
 if [[ "$root" == / ]]; then
   systemctl daemon-reload
-  systemctl enable pi-appliance-bootstrap.service
+  systemctl enable --now pi-appliance-bootstrap.service
 fi
