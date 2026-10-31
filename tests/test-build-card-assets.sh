@@ -12,8 +12,10 @@ KEY
 "$repo_root/scripts/build-card-assets.sh" "$work/key.pub" "$work/output"
 
 [[ -f "$work/output/user-data" ]]
+[[ -f "$work/output/network-config" ]]
 [[ -f "$work/output/pi-appliance-source.tar.gz" ]]
 grep -Fq 'appliance-test' "$work/output/user-data"
+grep -Fq 'dhcp4: true' "$work/output/network-config"
 tar -tzf "$work/output/pi-appliance-source.tar.gz" | grep -Fxq 'pi-appliance/bootstrap/appliancectl'
 if tar -tzf "$work/output/pi-appliance-source.tar.gz" | grep -Fq '/.git/'; then
   echo 'source bundle contains .git metadata' >&2

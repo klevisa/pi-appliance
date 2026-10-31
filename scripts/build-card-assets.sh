@@ -17,6 +17,7 @@ mkdir -p "$output_dir"
   "$repo_root/image/user-data.yaml.in" \
   "$public_key" \
   "$output_dir/user-data"
+cp "$repo_root/image/network-config" "$output_dir/network-config"
 
 COPYFILE_DISABLE=1 tar -czf "$output_dir/pi-appliance-source.tar.gz" \
   --exclude="$repo_name/.git" \
@@ -27,5 +28,6 @@ COPYFILE_DISABLE=1 tar -czf "$output_dir/pi-appliance-source.tar.gz" \
 
 shasum -a 256 \
   "$output_dir/user-data" \
+  "$output_dir/network-config" \
   "$output_dir/pi-appliance-source.tar.gz" \
   > "$output_dir/SHA256SUMS"
