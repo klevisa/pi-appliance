@@ -18,6 +18,7 @@ mkdir -p "$output_dir"
   "$public_key" \
   "$output_dir/user-data"
 cp "$repo_root/image/network-config" "$output_dir/network-config"
+cp "$repo_root/image/meta-data" "$output_dir/meta-data"
 : > "$output_dir/ssh"
 
 COPYFILE_DISABLE=1 tar -czf "$output_dir/pi-appliance-source.tar.gz" \
@@ -30,6 +31,7 @@ COPYFILE_DISABLE=1 tar -czf "$output_dir/pi-appliance-source.tar.gz" \
 shasum -a 256 \
   "$output_dir/user-data" \
   "$output_dir/network-config" \
+  "$output_dir/meta-data" \
   "$output_dir/ssh" \
   "$output_dir/pi-appliance-source.tar.gz" \
   > "$output_dir/SHA256SUMS"
